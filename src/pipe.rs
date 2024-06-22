@@ -12,7 +12,10 @@ const PIPE_SPAWN_INTERVAL: f32 = 2.0;
 const PIPE_COLOR: Color = Color::rgb(0.1, 0.1, 0.2);
 
 #[derive(Component)]
-pub struct Pipe;
+pub struct Pipe {
+    pub height: f32,
+    pub position: f32,
+}
 
 fn spawn(
     mut commands: Commands,
@@ -36,7 +39,10 @@ fn spawn(
                 ),
                 ..default()
             },
-            Pipe,
+            Pipe {
+                height: pipe_height,
+                position: 1500.0,
+            },
         ));
         commands.spawn((
             MaterialMesh2dBundle {
@@ -49,15 +55,19 @@ fn spawn(
                 ),
                 ..default()
             },
-            Pipe,
+            Pipe {
+                height: pipe_height,
+                position: 1500.0,
+            },
         ));
         *pipe_timer = PIPE_SPAWN_INTERVAL;
     }
 }
 
-fn move_pipes(time: Res<Time>, mut pipe_query: Query<(&mut Pipe, &mut Transform)>) {
-    for (_, mut transform) in pipe_query.iter_mut() {
+fn move_pipes(time: Res<Time>, mut query: Query<(&mut Pipe, &mut Transform)>) {
+    for (mut pipe, mut transform) in query.iter_mut() {
         transform.translation.x -= PIPE_SPEED * time.delta_seconds();
+        pipe.position = transform.translation.x;
     }
 }
 
