@@ -9,8 +9,8 @@ use crate::pipe::Pipe;
 const BALL_COLOR: Color = Color::rgba(0.8, 0.1, 0.2, 0.3);
 const BEST_COLOR: Color = Color::rgba(0.2, 0.8, 0.2, 1.0);
 const BALL_RADIUS: f32 = 25.0;
-const GRAVITY: f32 = 4000.0;
-const JUMP_VELOCITY: f32 = 1400.0;
+const GRAVITY: f32 = 2000.0;
+const JUMP_VELOCITY: f32 = 700.0;
 
 #[derive(Component)]
 pub struct Player {
@@ -86,13 +86,13 @@ fn jump(mut player_query: Query<&mut Player>, pipe_query: Query<&Pipe>) {
             continue;
         }
         let inputs = [
-            ball.position,
-            ball.velocity,
-            closest_distance + 500.0,
-            closest_pipe.unwrap().height - ball.position,
+            ball.position / 1000.0,
+            ball.velocity / 100.0,
+            (closest_distance + 500.0) / 1000.0,
+            (closest_pipe.unwrap().height - ball.position) / 1000.0,
         ];
         let outputs = ball.brain.think(inputs);
-        if outputs[0] > outputs[1] {
+        if outputs[0] > 0.5 {
             ball.velocity = JUMP_VELOCITY;
         }
     }
@@ -158,25 +158,6 @@ fn game_over(
         }
         count += 1;
     }
-    for _ in 0..100 {
-        commands.spawn((
-            MaterialMesh2dBundle {
-                mesh: Mesh2dHandle(meshes.add(Circle {
-                    radius: BALL_RADIUS,
-                })),
-                material: materials.add(BALL_COLOR),
-                transform: Transform::from_xyz(-500.0, 0.0, 0.0),
-                ..default()
-            },
-            Player {
-                velocity: 0.0,
-                is_dead: false,
-                position: 0.0,
-                score: 0.0,
-                brain: Brain::new(),
-            },
-        ));
-    }
     for i in 1..40 {
         commands.spawn((
             MaterialMesh2dBundle {
@@ -202,7 +183,7 @@ fn game_over(
                 radius: BALL_RADIUS,
             })),
             material: materials.add(BEST_COLOR),
-            transform: Transform::from_xyz(-500.0, 0.0, 0.0),
+            transform: Transform::from_xyz(-500.0, 0.0, 1.0),
             ..default()
         },
         Player {
@@ -213,6 +194,8 @@ fn game_over(
             brain: top_40_players[0].brain.clone(),
         },
     ));
+    top_40_players[0].brain.print();
+
     for player in player_entity_query.iter() {
         commands.entity(player).despawn();
     }
