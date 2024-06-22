@@ -1,3 +1,4 @@
+mod genetics;
 mod pipe;
 mod player;
 

@@ -5,10 +5,10 @@ use bevy::{
 
 const PIPE_GAP: f32 = 200.0;
 const PIPE_WIDTH: f32 = 50.0;
-const PIPE_SPEED: f32 = 200.0;
+const PIPE_SPEED: f32 = 800.0;
 const PIPE_HEIGHT_MIN: f32 = -250.0;
 const PIPE_HEIGHT_MAX: f32 = 250.0;
-const PIPE_SPAWN_INTERVAL: f32 = 2.0;
+const PIPE_SPAWN_INTERVAL: f32 = 1.0;
 const PIPE_COLOR: Color = Color::rgb(0.1, 0.1, 0.2);
 
 #[derive(Component)]
